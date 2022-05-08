@@ -30,13 +30,15 @@ class InceptionResnetV1EmbeddingModel(FaceEmbeddingModel):
         else:
             device = torch.device(device)
         self.device = device
-        self.inception_resnet_model = InceptionResnetV1(pretrained=pretrained).to(device).eval()
+        self.inception_resnet_model = (
+            InceptionResnetV1(pretrained=pretrained).to(device).eval()
+        )
 
     def get_embedding(self, face_image: bytes) -> Tuple[float]:
         """Returns face embedding"""
         face_image = read_image_from_bytes(face_image)
         face_image = torch.from_numpy(face_image).to(self.device)
-        with torch.no_grad:
+        with torch.no_grad():
             embedding = self.inception_resnet_model(face_image.unsqueeze(0))
         embedding = embedding.squeeze().detach().cpu().tolist()
         return tuple(embedding)
