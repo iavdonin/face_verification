@@ -38,5 +38,5 @@ class MTCNNDetector(FaceDetector):
         filtered_boxes = []
         for box, prob in zip(boxes, probs):
             if prob >= self.threshold:
-                filtered_boxes.append(tuple(box.tolist()))
+                filtered_boxes.append(tuple(box.astype(int).tolist()))
         return filtered_boxes
