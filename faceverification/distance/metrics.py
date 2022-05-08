@@ -14,7 +14,7 @@ class DistanceMetric(ABC):
     """Base class for distance metric classes"""
 
     @abstractmethod
-    def get_distance(
+    def calculate(
         self, first_vector: Tuple[float], second_vector: Tuple[float]
     ) -> float:
         """Calculates distance metric between two vectors"""
@@ -23,7 +23,7 @@ class DistanceMetric(ABC):
 class CosineDistance(DistanceMetric):
     """Cosine distance metric calculator"""
 
-    def get_distance(
+    def calculate(
         self, first_vector: Tuple[float], second_vector: Tuple[float]
     ) -> float:
         """Calculates cosine distance metric between two vectors"""
@@ -46,7 +46,7 @@ class EuclideanDistance(DistanceMetric):
     def __init__(self, l2_normalization: bool = False) -> None:
         self.l2_normalization = l2_normalization
 
-    def get_distance(
+    def calculate(
         self, first_vector: Tuple[float], second_vector: Tuple[float]
     ) -> float:
         """Calculates Euclidean distance metric between two vectors"""
