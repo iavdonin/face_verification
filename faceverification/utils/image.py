@@ -3,6 +3,7 @@
 from typing import Optional, Tuple
 
 import cv2
+import torch
 import numpy as np
 
 
@@ -35,3 +36,9 @@ def crop(
     if out_size is not None:
         crop = cv2.resize(crop, out_size)
     return cv2.imencode(".png", crop)[1].tostring()
+
+
+def fixed_image_standardization(image_tensor: torch.Tensor) -> torch.Tensor:
+    """Returns standartized tensor"""
+    processed_tensor = (image_tensor - 127.5) / 128.0
+    return processed_tensor
