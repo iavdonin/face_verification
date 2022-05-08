@@ -1,12 +1,12 @@
 """ Base class for all verificators """
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Tuple
 
-from ..detection.detector_base import FaceDetector
-from ..embedding.embedding_base import FaceEmbeddingModel
-from ..distance.metrics import DistanceMetric
-from ..utils.image import crop
+from faceverification.detection.detector_base import FaceDetector
+from faceverification.embedding.embedding_base import FaceEmbeddingModel
+from faceverification.distance.metrics import DistanceMetric
+from faceverification.utils.image import crop
 
 
 class FaceVerificator(ABC):
@@ -23,7 +23,7 @@ class FaceVerificator(ABC):
             **kwargs: extra parameters required for verification
 
         Returns:
-            Is a person on two photos the same or not.
+            Is a person on two photos the same or not and verification distance (Tuple[bool, float]).
         """
 
 
@@ -60,10 +60,10 @@ class CustomClassicVerificator(FaceVerificator):
         boxes = self.face_detector.detect(image)
         box = boxes[0]
         face_crop = crop(image, box, self.face_crop_size)
-        embedding = self.face_embedding_model(face_crop)
+        embedding = self.face_embedding_model.get_embedding(face_crop)
         return embedding
 
-    def verify(self, first_photo: bytes, second_photo: bytes) -> bool:
+    def verify(self, first_photo: bytes, second_photo: bytes) -> Tuple[bool, float]:
         """
         Verifies person by two photos.
 
@@ -72,9 +72,10 @@ class CustomClassicVerificator(FaceVerificator):
             second_photo: second persons' photo.
 
         Returns:
-            Is a person on two photos the same or not.
+            Is a person on two photos the same or not and verification score (Tuple[bool, float]).
         """
         first_emb = self._get_face_embedding(first_photo)
         second_emb = self._get_face_embedding(second_photo)
         distance = self.distance_metric.calculate(first_emb, second_emb)
-        return True if 1.0 - distance > self.verificatior_threshold else False
+        is_verified = True if distance < self.verificator_threshold else False
+        return is_verified, distance
