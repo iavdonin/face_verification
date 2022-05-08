@@ -1,4 +1,0 @@
-numpy==1.22.3
-opencv-python==4.5.5.64
-pytorch==1.11.0
-facenet-pytorch==2.5.2

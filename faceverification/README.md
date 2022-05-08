@@ -4,10 +4,16 @@
 
 Python 3.9
 
-## Install dependencies
+## Install package
 
+### With pip
 ```bash
-pip install -r requirements.txt
+pip install .
+```
+
+### With poetry
+```bash
+poetry install
 ```
 
 ## Python API Usage
