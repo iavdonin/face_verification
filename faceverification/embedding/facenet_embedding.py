@@ -8,8 +8,11 @@ from typing import Literal, Tuple
 import torch
 from facenet_pytorch import InceptionResnetV1
 
+from faceverification.utils.image import (
+    fixed_image_standardization,
+    read_image_from_bytes,
+)
 from .embedding_base import FaceEmbeddingModel
-from ..utils.image import read_image_from_bytes
 
 
 class InceptionResnetV1EmbeddingModel(FaceEmbeddingModel):
@@ -37,8 +40,10 @@ class InceptionResnetV1EmbeddingModel(FaceEmbeddingModel):
     def get_embedding(self, face_image: bytes) -> Tuple[float]:
         """Returns face embedding"""
         face_image = read_image_from_bytes(face_image)
-        face_image = torch.from_numpy(face_image).to(self.device)
         with torch.no_grad():
-            embedding = self.inception_resnet_model(face_image.unsqueeze(0))
+            image_tensor = torch.from_numpy(face_image)
+            image_tensor = image_tensor.unsqueeze(0).permute(0, 3, 1, 2).to(self.device)
+            image_tensor = fixed_image_standardization(image_tensor)
+            embedding = self.inception_resnet_model(image_tensor)
         embedding = embedding.squeeze().detach().cpu().tolist()
         return tuple(embedding)
