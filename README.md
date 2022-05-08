@@ -1,1 +1,1 @@
-# face_verification
+# Face verification project
