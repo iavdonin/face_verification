@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 Usage example:
 ```python
-from faceverification import DefaultFaceVerificator
+from faceverification.verification import get_default_face_verificator
 
 
 # read images to verify
@@ -23,16 +23,16 @@ with open('photo1.png', 'rb') as photo_file_1, open('photo2.png', 'rb') as photo
     photo_2 = photo_file_2.read()
 
 # create face verificator
-face_verificator = DefaultFaceVerificator()
+face_verificator = get_default_face_verificator()
 
 # ferify face
-is_verified = face_verificator.verify(photo_1, photo_2)
+is_verified, _ = face_verificator.verify(photo_1, photo_2)
 
 # print result
 if is_verified:
-    print('Person is verified')
+    print('Verification is passed')
 else:
-    print('Person is NOT verified')
+    print('Verification is NOT passed')
 ```
 
 # CLI usage
