@@ -35,7 +35,7 @@ else:
     print('Verification is NOT passed')
 ```
 
-# CLI usage
+## CLI usage
 
 ```bash
 python verify.py path/to/photo1.jpeg path/to/photo2.jpeg
