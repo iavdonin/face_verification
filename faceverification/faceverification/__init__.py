@@ -1,1 +1,0 @@
-from faceverification.verification import get_default_face_verificator
