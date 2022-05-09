@@ -7,6 +7,7 @@ from faceverification.detection.detector_base import FaceDetector
 from faceverification.embedding.embedding_base import FaceEmbeddingModel
 from faceverification.distance.metrics import DistanceMetric
 from faceverification.utils.image import crop
+from faceverification.exceptions import FaceNotFoundError, MultipleFacesError
 
 
 class FaceVerificator(ABC):
@@ -58,6 +59,10 @@ class CustomClassicVerificator(FaceVerificator):
 
     def _get_face_embedding(self, image: bytes) -> tuple[float]:
         boxes = self.face_detector.detect(image)
+        if len(boxes) == 0:
+            raise FaceNotFoundError("No face found on the image")
+        if len(boxes) > 1:
+            raise MultipleFacesError("Mupliple faces found on the image")
         box = boxes[0]
         face_crop = crop(image, box, self.face_crop_size)
         embedding = self.face_embedding_model.get_embedding(face_crop)
@@ -72,7 +77,7 @@ class CustomClassicVerificator(FaceVerificator):
             second_photo: second persons' photo.
 
         Returns:
-            Is a person on two photos the same or not and verification score (Tuple[bool, float]).
+            Is a person on two photos the same or not and verification distance (Tuple[bool, float]).
         """
         first_emb = self._get_face_embedding(first_photo)
         second_emb = self._get_face_embedding(second_photo)
