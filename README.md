@@ -46,3 +46,26 @@ else:
 ```bash
 python verify.py path/to/photo1.jpeg path/to/photo2.jpeg
 ```
+
+## REST API
+### Desription
+Для удобства дополнительно реализовано использование системы верификации через REST API. 
+Чтобы его использовать нужно собрать и запустить сервер с использованием Docker. 
+
+
+У сервера есть только один HTTP метод POST с адресом `/`. В теле HTTP запроса нужно отправить два изображения в виде bytearray в формате JSON. Пример:
+```python
+{
+    'first_image': b'...',
+    'second_image': b'...'
+}
+```
+
+### Build
+```bash
+docker build -t faceverification_server -f rest_api/Dockerfile .
+```
+### Run
+```bash
+docker run --rm faceverification_server
+```
