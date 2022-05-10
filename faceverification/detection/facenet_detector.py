@@ -35,6 +35,8 @@ class MTCNNDetector(FaceDetector):
         """Returns detected faces coordinates"""
         image = read_image_from_bytes(image)
         boxes, probs = self.mtcnn_model.detect(image)
+        if boxes is None or probs is None:
+            return []
         filtered_boxes = []
         for box, prob in zip(boxes, probs):
             if prob >= self.threshold:
